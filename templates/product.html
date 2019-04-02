@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="product" id={{ product }}>
+    <h1 class="product-header"></h1>
+    <div class="ingredients"></div>
+</div>
+<script>
+    let productId = $('.product')[0].attributes.id.value
+    $(document).ready(function(e){
+        $.ajax({
+            method: 'GET',
+            url: `https://stormy-castle-78446.herokuapp.com/products/${productId}`,
+            success: function (response) {
+                console.log("brock's skincare api:")
+                console.log(response)
+                $('.product-header').html(`${response.brand} ${response.name}`)
+                for (let i = 0; i < 5; i++) {
+                    let card = $(`<div class="card ingredient-wrapper"/>`);
+                    let ingredientText = $(`<p class="${i}"></p>`);
+                    $(ingredientText).html(response.ingredient_list[i])
+                    card.append(ingredientText)
+                    $('.ingredients').append(card)
+                }
+            },
+            error: function(error) {
+            console.log("brock's skincare api:")
+            console.log(error);
+            }
+        });
+    });
+</script>
+{% endblock %}
