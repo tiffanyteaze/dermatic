@@ -62,7 +62,39 @@ class Review(Model):
     )
     content = TextField()
     product_id = IntegerField()
+    buy_again = BooleanField(default=False)
+    rating: IntegerField()
+    helpful_votes: IntegerField()
+    not_helpful_votes: IntegerField()
 
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)  
+        indexes = ((("user_id", "product_id"), True),)
+
+class Vote(Model):
+    user = ForeignKeyField(
+        model=User,
+        backref='votes'
+    )
+    review = ForeignKeyField(
+        model=Review,
+        backref='votes'
+    )
+    helpful: BooleanField()
+
+    class Meta:
+        database = DATABASE
+        indexes = ((("user_id", "review_id"), True),)
+
+class List(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(
+        model=User,
+        backref='list'
+    )
+    product_id = IntegerField()
+    
     class Meta:
         database = DATABASE
         order_by = ('-timestamp',)  
