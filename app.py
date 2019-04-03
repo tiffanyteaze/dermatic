@@ -128,6 +128,11 @@ if __name__ == '__main__':
             username='tiffany',
             email="tteaze@gmail.com",
             password='password',
+            first_name="Tiffany",
+            last_name="Teaze",
+            skin_type="dry",
+            age="31",
+            avatar="../static/images/mask.png",
             admin=True
             )
     except ValueError:
