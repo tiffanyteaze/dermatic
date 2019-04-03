@@ -86,7 +86,8 @@ def product(productid):
     from models import Review, User
     form = forms.ReviewForm()
     product = int(productid)
-    reviews = (Review.select(Review.content, User.username).join(User).where(
+    print(current_user.username)
+    reviews = (Review.select(Review.content, Review.product_id, User.id, User.username).join(User).where(
         User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)
     if form.validate_on_submit():
         models.Review.create(user=g.user._get_current_object(),
@@ -94,7 +95,31 @@ def product(productid):
                            product_id=product)
         flash("Review posted! Thanks!", "success")
         return redirect(url_for('product', productid=productid))
-    return render_template('product.html', form=form, product=product, reviews=reviews)
+    return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id)
+
+@app.route('/delete/<productid>/user/<userid>', methods=['POST'])
+@login_required
+def delete_review(productid, userid):
+    review = models.Review.select().where(models.Review.user == userid,
+                                      models.Review.product_id == productid).get()
+    review.delete_instance()
+    return redirect(url_for('product', productid=productid))
+
+@app.route('/edit/<productid>/user/<userid>', methods=['GET', 'POST'])
+@login_required
+def edit_review(productid, userid):
+    form = forms.ReviewForm()
+    user_id = int(userid)
+    product_id = int(productid)
+    review = models.Review.select().where(models.Review.user == user_id,
+                                      models.Review.product_id == product_id).get()
+    if form.validate_on_submit():
+        print(form.content.data)
+        print(review)
+        review.content = form.content.data
+        review.save()
+        return redirect(url_for('product', productid=productid))
+    return render_template('edit-review.html', form=form, userid=user_id)
 
 if __name__ == '__main__':
     models.initialize()

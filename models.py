@@ -31,6 +31,19 @@ class User(UserMixin, Model):
         except IntegrityError:
             raise ValueError("User already exists")
 
+    @classmethod
+    def edit_user(cls, username, email, password, avatar="../static/images/brock.png", admin=False):
+        try:
+            cls.update(
+                username=username,
+                email=email,
+                password=generate_password_hash(password),
+                is_admin=admin,
+                avatar=avatar
+            )
+        except IntegrityError:
+            raise ValueError("User already exists")
+
 class Review(Model):
     timestamp = DateTimeField(default=datetime.datetime.now)
     user = ForeignKeyField(
