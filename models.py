@@ -15,7 +15,11 @@ class User(UserMixin, Model):
     
     class Meta:
         database = DATABASE
-        
+        order_by = ('-joined_at',)
+
+    def get_reviews(self):
+        return Review.select().where(Review.user == self)
+
     @classmethod
     def create_user(cls, username, email, password, admin=False):
         try:
@@ -26,8 +30,22 @@ class User(UserMixin, Model):
                 is_admin=admin)
         except IntegrityError:
             raise ValueError("User already exists")
+
+class Review(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(
+        model=User,
+        backref='reviews'
+    )
+    content = TextField()
+    product_id = IntegerField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)  
+        indexes = ((("user_id", "product_id"), True),)
             
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User], safe=True)
+    DATABASE.create_tables([User, Review], safe=True)
     DATABASE.close()
