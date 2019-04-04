@@ -12,29 +12,43 @@
 ></script>
 </head>
 <body>
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <ul class="navbar-nav mr-auto">
+        <li>
+          <a class="navbar-brand" href="http://localhost:8000">Dermatic</a>
+        </li>
+        <li>  
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2 product-input" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0 name-search-btn" type="submit">Search</button>
+          </form>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li>
+          <a class="nav-link" href="{{url_for('logout')}}" title="logout">Logout</a>
+        </li>
+        {% else %}
+        <li>
+          <a class="nav-link" href="{{url_for('login')}}" title="login">Login</a>
+        </li>
+        <li>
+          <a class="nav-link" href="{{url_for('register')}}" title="register">register</a>
+        </li>
+        {% endif %}
+      </ul>
+      </nav>
   <div class="container">
     <div class="row">
       <div class="col">
         <h1>{% if current_user.is_authenticated %} Hello {{current_user.username}} {%endif%}</h1>
       </div>
-      <div class="col">
-        {% if current_user.is_authenticated %}
-                <a href="{{url_for('logout')}}" title="logout">Logout</a>
-                {% else %}
-                <a href="{{url_for('login')}}" title="login">Login</a>
-                <a href="{{url_for('register')}}" title="register">register</a>
-        {% endif %}
-      </div>
+    </div>
+    <div class="row">
+      <div class="search-results"></div>
+    </div>
     </div>
     <br>
     <div class="row">
-      <div class="col">
-        <nav>
-              <a href="{{ url_for('index') }}">Index Page with all the posts</a>
-        </nav>
-
-      </div>
       <div class="col">
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -51,5 +65,39 @@
   </div>
 
 <script src="../static/scripts/app.js"></script>
+<script>
+    $('.name-search-btn').click(function(e) {
+      e.preventDefault();
+      $('.search-results').empty();
+      let inputVal = $('.product-input').val();
+      let formattedInput = inputVal.replace(/ /g, '+');
+      console.log(formattedInput)
+      let searchTerm = "drunk+elephant"
+      $.ajax({
+          method: 'GET',
+          url: `https://skincare-api.herokuapp.com/product?q=${formattedInput}&limit=25&page=1`,
+          success: function (response) {
+              console.log(response)
+              response.map(child => {
+                  let productId = child.id;
+                  let productLink = `<a href="http://localhost:8000/product/${productId}">${child.brand} ${child.name}</a>`;
+                  let card = $(`<div class="card search-wrapper"/>`);
+                  let btn = $(
+                    `<input class="now-playing-button btn btn-dark btn-block" type=submit value="View Product" data-id="${productId}"></input>`
+                  );
+                  let url = 'https://image.tmdb.org/t/p/w500' + child.poster_path;
+                  card.append(productLink)
+                  $('.search-results').append(card);
+                  return productId;
+                });
+  
+  
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      })
+  })
+</script>
 </body>
 </html>
