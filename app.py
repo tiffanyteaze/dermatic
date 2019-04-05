@@ -5,7 +5,6 @@ from flask_bcrypt import check_password_hash
 from peewee import fn
 from flask_bcrypt import generate_password_hash
 
-
 import models
 import forms
 
@@ -82,8 +81,6 @@ def logout():
     flash("You've been logged out", "success")
     return redirect(url_for('index'))
 
-
-
 @app.route('/product/<productid>', methods=('GET', 'POST'))
 @login_required
 def product(productid):
@@ -103,8 +100,6 @@ def product(productid):
         models.List.create_list_item(current_user.id, productid)
         return 'success'
     return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id)
-
-
 
 @app.route('/delete/<productid>/user/<userid>', methods=['POST'])
 @login_required
@@ -153,7 +148,8 @@ def update_user(username):
 @login_required
 def user(username):
     user = models.User.select().where(models.User.username == username).get()
-    return render_template('user_profile.html', user=user)
+    list = current_user.get_list().limit(100)
+    return render_template('user_profile.html', user=user, list=list)
 
 if __name__ == '__main__':
     models.initialize()

@@ -25,6 +25,9 @@ class User(UserMixin, Model):
     def get_reviews(self):
         return Review.select().where(Review.user == self)
 
+    def get_list(self):
+        return List.select().where(List.user_id == self)
+
     @classmethod
     def create_user(cls, username, email, password, first_name="", last_name="", skin_type="", age=18, avatar="../static/images/mask.png", admin=False):
         try:

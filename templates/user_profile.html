@@ -12,9 +12,57 @@
         </div>
     </div>
     <div class="row">
+        <h2>Profile Information:</h2>
+    </div>
+    <div class="row">
+        <p>Email: {{ user.email }}</p>
+    </div>
+    <div class="row">
+        <p>Name: {{ user.first_name}} {{ user.last_name }}</p>
+    </div>
+    <div class="row">
         <a href="{{ url_for('update_user', username=current_user.username) }}">Edit Profile</a>
     </div>
 </div>
 
+<h1>Favorites</h1>
+{% for item in list %}
+    <div class="card my-fav-list" id={{ item.product_id }}>
+    </div>
+{% endfor %}
+
 {{ super() }}
+
+<script>
+    let myListItems = [];
+
+    $(document).ready(function(e){
+        let items = $('.my-fav-list')
+
+        for (let i = 0; i < items.length; i++) {
+        myListItems.push(items[i].attributes.id.value);
+        }
+
+        for(let i = 0; i < myListItems.length; i++) {
+            $.ajax({
+                method: 'GET',
+                url: `https://stormy-castle-78446.herokuapp.com/products/${myListItems[i]}`,
+                success: function (response) {
+                    let favLink = $(`<a href="http://localhost:8000/product/${myListItems[i]}">${response.brand} ${response.name}</a>`);
+
+                    for (let j = 0; j < items.length; j++) {
+                        if (myListItems[i] === items[j].getAttribute('id')) {
+                            
+                            $(items[j]).append(favLink)
+                        }
+                    }
+                    return myListItems[i];
+                },
+                error: function(error) {
+                console.log(error);
+                }
+            });
+        };
+    })
+</script>
 {% endblock %}
