@@ -4,8 +4,15 @@
 {% block content %}
 <div class="product" id={{ product }}>
     <h1 class="product-header"></h1>
-    <div class="ingredients"></div>
 </div>
+
+<div class="row">
+    <h5>Ingredient Summary:</h5>
+</div>
+
+<div class="row">
+    <div class="ingredients"></div>
+</div>  
 
 <div class="row">
     <button class="fav-btn" id={{ product }}>Add To Favorites</button>
@@ -21,18 +28,19 @@
     </form>
 </div>
 
+
 {% for review in reviews %}
-    <p>"{{ review.content }}"</p>
-    <p>by {{ review.user.username }}</p>
+<div class="row review-container">
+    <p>"{{ review.content }}" by {{ review.user.username }}</p>
     {% if review.user.id ==  currentuser %}
         <form action="{{ url_for('delete_review', productid=review.product_id, userid=review.user.id) }}" method=post class=delete-review>
             <input type=hidden value="{{review.product_id}}"name=productid</input>
             <input type=hidden value="{{review.user}}"name=userid</input>
             <input type=submit value="Delete" class="btn btn-warning btn-block"></input>
         </form>
-        <a href="{{ url_for('edit_review', productid=review.product_id, userid=currentuser) }}">Edit</a>
+        <a class="btn btn-info edit-review-btn" href="{{ url_for('edit_review', productid=review.product_id, userid=currentuser) }}">Edit</a>
     {% endif %}
-
+</div>
 {% endfor %}
 
 <script>
