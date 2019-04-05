@@ -37,7 +37,7 @@
           <a class="nav-link" href="{{url_for('login')}}" title="login">Login</a>
         </li>
         <li>
-          <a class="nav-link" href="{{url_for('register')}}" title="register">register</a>
+          <a class="nav-link" href="{{url_for('register')}}" title="register">Register</a>
         </li>
         {% endif %}
       </ul>
@@ -53,17 +53,16 @@
     </div>
     </div>
     <br>
-    <div class="row">
-      <div class="col">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class={{category}}>{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    <div class="container">
+      <div class="row">
+          {% with messages = get_flashed_messages(with_categories=True) %}
+              {% if messages %}
+                  {% for category, message in messages %}
+                      <div class={{category}}>{{ message }}</div>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
       </div>
-      <div class="col">
         {% block content %}{% endblock %}
       </div>
     </div>
