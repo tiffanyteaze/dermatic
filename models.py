@@ -42,12 +42,13 @@ class User(UserMixin, Model):
             raise ValueError("User already exists")
 
     @classmethod
-    def edit_user(cls, username, email, password, avatar="../static/images/brock.png", admin=False):
+    def edit_user(cls, username, email, password, first_name, avatar="../static/images/brock.png", admin=False):
         try:
             cls.update(
                 username=username,
                 email=email,
                 password=generate_password_hash(password),
+                first_name=first_name,
                 is_admin=admin,
                 avatar=avatar
             )
@@ -99,8 +100,18 @@ class List(Model):
         database = DATABASE
         order_by = ('-timestamp',)  
         indexes = ((("user_id", "product_id"), True),)
+
+    @classmethod
+    def create_list_item(cls, user_id, productid):
+        try:
+            cls.create(
+                user=user_id,
+                product_id=productid
+            )
+        except IntegrityError:
+            return success
             
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Review], safe=True)
+    DATABASE.create_tables([User, Review, Vote, List], safe=True)
     DATABASE.close()

@@ -1,8 +1,10 @@
 from flask import Flask, g
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import check_password_hash
 from peewee import fn
+from flask_bcrypt import generate_password_hash
+
 
 import models
 import forms
@@ -80,6 +82,8 @@ def logout():
     flash("You've been logged out", "success")
     return redirect(url_for('index'))
 
+
+
 @app.route('/product/<productid>', methods=('GET', 'POST'))
 @login_required
 def product(productid):
@@ -89,13 +93,18 @@ def product(productid):
     print(current_user.username)
     reviews = (Review.select(Review.content, Review.product_id, User.id, User.username).join(User).where(
         User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)
-    if form.validate_on_submit():
+    if form.validate_on_submit() and 'POST':
         models.Review.create(user=g.user._get_current_object(),
                            content=form.content.data.strip(),
                            product_id=product)
         flash("Review posted! Thanks!", "success")
         return redirect(url_for('product', productid=productid))
+    elif request.method == 'POST':
+        models.List.create_list_item(current_user.id, productid)
+        return 'success'
     return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id)
+
+
 
 @app.route('/delete/<productid>/user/<userid>', methods=['POST'])
 @login_required
@@ -120,6 +129,31 @@ def edit_review(productid, userid):
         review.save()
         return redirect(url_for('product', productid=productid))
     return render_template('edit-review.html', form=form, userid=user_id)
+
+@app.route('/user/<username>/edit', methods=['GET', 'POST'])
+@login_required
+def update_user(username):
+    form = forms.UserForm()
+    user = models.User.select().where(models.User.username == username).get()
+    print("you're outside the form submit")
+    print(user.username)
+    if form.validate_on_submit():
+        print("you're in the form submit")
+        print(form.username.data)
+        user.username = form.username.data
+        user.email = form.email.data
+        user.password = generate_password_hash(form.password.data)
+        user.first_name = form.first_name.data
+        print(user.username)
+        user.save()
+        return redirect(url_for('user', username=current_user.username))
+    return render_template('edit_user.html', user=user, form=form)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = models.User.select().where(models.User.username == username).get()
+    return render_template('user_profile.html', user=user)
 
 if __name__ == '__main__':
     models.initialize()
