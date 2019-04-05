@@ -29,6 +29,11 @@
 {% for item in list %}
     <div class="card my-fav-list" id={{ item.product_id }}>
     </div>
+    <form action="{{ url_for('delete_fav', productid=item.product_id, userid=user.id) }}" method=post class=delete-fav>
+            <input type=hidden value="{{item.product_id}}"name=productid</input>
+            <input type=hidden value="{{ user.id }}"name=userid</input>
+            <input type=submit value="Remove From List" class="btn btn-warning btn-block"></input>
+    </form>
 {% endfor %}
 
 {{ super() }}
@@ -63,6 +68,13 @@
                 }
             });
         };
+    })
+
+    $('.my-fav-list').on('click', '.fav-delete-btn', function(e){
+        console.log("Delete button was clicked!")
+        $.ajax({
+
+        })
     })
 </script>
 {% endblock %}

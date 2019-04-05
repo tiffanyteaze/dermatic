@@ -118,8 +118,6 @@ def edit_review(productid, userid):
     review = models.Review.select().where(models.Review.user == user_id,
                                       models.Review.product_id == product_id).get()
     if form.validate_on_submit():
-        print(form.content.data)
-        print(review)
         review.content = form.content.data
         review.save()
         return redirect(url_for('product', productid=productid))
@@ -150,6 +148,14 @@ def user(username):
     user = models.User.select().where(models.User.username == username).get()
     list = current_user.get_list().limit(100)
     return render_template('user_profile.html', user=user, list=list)
+
+@app.route('/delete_fav/<productid>/user/<userid>', methods=['POST'])
+@login_required
+def delete_fav(productid, userid):
+    list = models.List.select().where(models.List.user == userid,
+                                      models.List.product_id == productid).get()
+    list.delete_instance()
+    return redirect(url_for('user', username=current_user.username))
 
 if __name__ == '__main__':
     models.initialize()
