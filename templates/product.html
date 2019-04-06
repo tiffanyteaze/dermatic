@@ -15,6 +15,10 @@
 </div>  
 
 <div class="row">
+        <div class="hidden-ingredient-wrapper"></div>
+    </div>  
+
+<div class="row">
     <button class="fav-btn" id={{ product }}>Add To Favorites</button>
 </div>
 
@@ -45,6 +49,7 @@
 
 <script>
     let productId = $('.product')[0].attributes.id.value
+    let productArray = []
     $(document).ready(function(e){
         $.ajax({
             method: 'GET',
@@ -58,11 +63,24 @@
                     card.append(ingredientText)
                     $('.ingredients').append(card)
                 }
+
+                for (let j = 0; j < response.ingredient_list.length; j++){
+                    productArray.push(response.ingredient_list[j])
+                }
             },
             error: function(error) {
             console.log(error);
             }
         });
+        $.ajax({
+            method: 'GET',
+            url: `https://stormy-castle-78446.herokuapp.com/products`,
+            success: function(response) {
+                for (n = 0; n < 49; n+=2){
+                    let firstArray
+                }
+            }
+        })
     });
 
     $('.fav-btn').click(function(e){
@@ -77,5 +95,7 @@
             }
         })
     })
+
+
 </script>
 {% endblock %}
