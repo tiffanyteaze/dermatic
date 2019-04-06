@@ -139,13 +139,13 @@ def update_user(username):
         user.first_name = form.first_name.data
         print(user.username)
         user.save()
-        return redirect(url_for('user', username=current_user.username))
+        return redirect(url_for('user', userid=current_user.id))
     return render_template('edit_user.html', user=user, form=form)
 
-@app.route('/user/<username>')
+@app.route('/user/<userid>')
 @login_required
-def user(username):
-    user = models.User.select().where(models.User.username == username).get()
+def user(userid):
+    user = models.User.select().where(models.User.id == current_user.id).get()
     list = current_user.get_list().limit(100)
     return render_template('user_profile.html', user=user, list=list)
 
