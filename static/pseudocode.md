@@ -23,7 +23,7 @@ for (n = 0; n < allProducts in API; n++)
             id: productObject.id,
             ingredient_list: productObject.ingredient_list,
             name: productObject.name,
-            similar_ingredients: similarIngredients;
+            similar_ingredients: similarIngredients
         }
         if similarProductsArray.length < 5
             push productObject to similarProductsArray
