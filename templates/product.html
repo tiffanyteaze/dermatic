@@ -11,12 +11,11 @@
 </div>
 
 <div class="row">
-    <div class="ingredients"></div>
-</div>  
-
-<div class="row">
-        <div class="hidden-ingredient-wrapper"></div>
-    </div>  
+    <div class="ingredients col"></div>
+    <div class="similar-ingredient-wrapper-0 col"></div>
+    <div class="similar-ingredient-wrapper-1 col"></div>
+    <div class="similar-ingredient-wrapper-2 col"></div>
+</div>
 
 <div class="row">
     <button class="fav-btn" id={{ product }}>Add To Favorites</button>
@@ -103,7 +102,7 @@
                             }
                         }
                     }
-                    
+
                     productObject = {
                         brand: productObject.brand,
                         id: productObject.id,
@@ -126,6 +125,23 @@
                 }
 
                 console.log(similarProductsArray);
+                for (let i = 0; i < 5; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        let card = $(`<div class="card ingredient-wrapper"/>`);
+                        let ingredientText = $(`<p></p>`);
+                        $(ingredientText).html(similarProductsArray[i].ingredient_list[j])
+                        card.append(ingredientText)
+                        if (j === 0) {
+                            $('.similar-ingredient-wrapper-0').append(card)
+                        }
+                        else if (j === 1) {
+                            $('.similar-ingredient-wrapper-1').append(card)
+                        }
+                        else if (j === 2) {
+                            $('.similar-ingredient-wrapper-2').append(card)
+                        }
+                    }
+                }
             }
         })
     });
