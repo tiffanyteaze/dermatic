@@ -7,7 +7,7 @@
 </div>
 
 <div class="row">
-    <h5>Ingredient Summary:</h5>
+    <h5>Compare Similar Products:</h5>
 </div>
 
 <div class="row">
@@ -67,6 +67,13 @@
             url: `https://stormy-castle-78446.herokuapp.com/products/${productId}`,
             success: function (response) {
                 $('.product-header').html(`${response.brand} ${response.name}`)
+
+                let productName = $(`<div class="card product-name-wrapper"/>`);
+                let productText = $(`<b><p></p></b>`)
+                $(productText).html(`${response.brand} ${response.name}`)
+                productName.append(productText)
+                $('.ingredients').append(productName)
+
                 for (let i = 0; i < 5; i++) {
                     let card = $(`<div class="card ingredient-wrapper"/>`);
                     let ingredientText = $(`<p class="${i}"></p>`);
@@ -125,19 +132,34 @@
                 }
 
                 console.log(similarProductsArray);
-                for (let i = 0; i < 5; i++) {
-                    for (let j = 0; j < 3; j++) {
+                for (let i = 0; i < 3; i++) {
+                    let productName = $(`<div class="card product-name-wrapper"/>`);
+                    let productText = $(`<b><p></p></b>`);
+                    $(productText).html(`${similarProductsArray[i].brand} ${similarProductsArray[i].name}`)
+                    productName.append(productText)
+                    console.log(`${similarProductsArray[i].brand} ${similarProductsArray[i].name}`)
+                    if (i === 0) {
+                        $('.similar-ingredient-wrapper-0').append(productName)
+                    }
+                    else if (i === 1) {
+                        $('.similar-ingredient-wrapper-1').append(productName)
+                    }
+                    else if (i === 2) {
+                        $('.similar-ingredient-wrapper-2').append(productName)
+                    }
+
+                    for (let j = 0; j < 5; j++) {
                         let card = $(`<div class="card ingredient-wrapper"/>`);
                         let ingredientText = $(`<p></p>`);
                         $(ingredientText).html(similarProductsArray[i].ingredient_list[j])
                         card.append(ingredientText)
-                        if (j === 0) {
+                        if (i === 0) {
                             $('.similar-ingredient-wrapper-0').append(card)
                         }
-                        else if (j === 1) {
+                        else if (i === 1) {
                             $('.similar-ingredient-wrapper-1').append(card)
                         }
-                        else if (j === 2) {
+                        else if (i === 2) {
                             $('.similar-ingredient-wrapper-2').append(card)
                         }
                     }
