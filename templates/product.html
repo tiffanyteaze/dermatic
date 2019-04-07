@@ -50,6 +50,11 @@
 <script>
     let productId = $('.product')[0].attributes.id.value
     let productArray = []
+    let mostSimilarIngredients = 0;
+    let mostSimilarIngredientsId;
+    let mostSimilarIngredientsName;
+    let similarIngredientsTwo = 0;
+
     $(document).ready(function(e){
         $.ajax({
             method: 'GET',
@@ -72,12 +77,66 @@
             console.log(error);
             }
         });
+
         $.ajax({
             method: 'GET',
             url: `https://stormy-castle-78446.herokuapp.com/products`,
             success: function(response) {
-                for (n = 0; n < 49; n+=2){
-                    let firstArray
+                let allProducts = response;
+                for (n = 0; n < 1000; n+=2){
+                    let firstArray = allProducts[n].ingredient_list;
+                    let firstArrayId = allProducts[n].id;
+                    let firstArrayName = `${allProducts[n].brand} ${allProducts[n].name}`
+
+                    let secondArray = allProducts[n+1].ingredient_list;
+                    let secondArrayId = allProducts[n+1].id;
+                    let secondArrayName = `${allProducts[n+1].brand} ${allProducts[n+1].name}`
+
+                    let similarIngredientsOne = 0;
+                    if (firstArrayId != productId){
+                        for (i = 0; i < productArray.length; i++) {
+                            for(j = 0; j < firstArray.length; j++){
+                                if (productArray[i] === firstArray[j]){
+                                    similarIngredientsOne++;
+                                }
+                            }
+                        }
+                    }
+                    console.log(firstArrayName)
+                    console.log(similarIngredientsOne)
+
+                    let similarIngredientsTwo = 0;
+                    if (secondArrayId != productId){
+                        for (i = 0; i < productArray.length; i++) {
+                            for(j = 0; j < secondArray.length; j++){
+                                if (productArray[i] === secondArray[j]){
+                                    similarIngredientsOne++;
+                                }
+                            }
+                        }
+                    }
+                    console.log(secondArrayName)
+                    console.log(similarIngredientsTwo)
+
+                    if (similarIngredientsOne > similarIngredientsTwo && similarIngredientsOne > mostSimilarIngredients){
+                        mostSimilarIngredients = similarIngredientsOne;
+                        mostSimilarIngredientsId = firstArrayId;
+                        mostSimilarIngredientsName = firstArrayName;
+                    }
+
+                    else if (similarIngredientsTwo > similarIngredientsOne && similarIngredientsTwo > mostSimilarIngredients){
+                        mostSimilarIngredients = similarIngredientsTwo;
+                        mostSimilarIngredientsId = secondArrayId;
+                        mostSimilarIngredientsName = secondArrayName;
+                    }
+
+                    else if (similarIngredientsOne === similarIngredientsTwo){
+                        mostSimilarIngredients = similarIngredientsOne;
+                        mostSimilarIngredientsId = firstArrayId;
+                        mostSimilarIngredientsName = firstArrayName;
+                    }
+                    console.log(`Most Similar Ingredients:`)
+                    console.log(mostSimilarIngredientsName)
                 }
             }
         })
