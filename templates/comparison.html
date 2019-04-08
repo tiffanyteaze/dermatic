@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="product" id={{ product }}></div>
+    <h1 class="product-header"></h1>
+
+<div class="row justify-content-end">
+        <a href="{{ url_for('product', productid=product) }}">Go Back to Product Page</a>
+</div>
+
+<div class="row">
+        <div class="col">
+            <div class="card">
+                <b><p>Percent Similar:</p></b>
+            </div>
+        </div>
+        <div class="percent-similar-wrapper-0 col"></div>
+        <div class="percent-similar-wrapper-1 col"></div>
+        <div class="percent-similar-wrapper-2 col"></div>
+</div>
+
+<div class="row">
+    <div class="ingredients col"></div>
+    <div class="similar-ingredient-wrapper-0 col"></div>
+    <div class="similar-ingredient-wrapper-1 col"></div>
+    <div class="similar-ingredient-wrapper-2 col"></div>
+</div>
+
+<div class="row justify-content-end">
+        <a href="{{ url_for('product', productid=product) }}">Go Back to Product Page</a>
+</div>
+
+<script>
+        let productId = $('.product')[0].attributes.id.value
+        let productArray = []
+        let similarProductsArray = []
+    
+        function compare(a, b) {
+            let comparison = 0;
+            if (a.similar_ingredients > b.similar_ingredients) {
+              comparison = 1;
+            } else if (b.similar_ingredients > a.similar_ingredients) {
+              comparison = -1;
+            }
+            return comparison;
+        }
+    
+        $(document).ready(function(e){
+            $.ajax({
+                method: 'GET',
+                url: `https://stormy-castle-78446.herokuapp.com/products/${productId}`,
+                success: function (response) {
+                    $('.product-header').html(`${response.brand} ${response.name}`)
+    
+                    let productName = $(`<div class="card product-name-wrapper"/>`);
+                    let productText = $(`<b><p></p></b>`)
+                    $(productText).html(`${response.brand} ${response.name}`)
+                    productName.append(productText)
+                    $('.ingredients').append(productName)
+    
+                    for (let i = 0; i < response.ingredient_list.length; i++) {
+                        let card = $(`<div class="card ingredient-wrapper"/>`);
+                        let ingredientText = $(`<p class="${i}"></p>`);
+                        $(ingredientText).html(response.ingredient_list[i])
+                        card.append(ingredientText)
+                        $('.ingredients').append(card)
+                    }
+    
+                    for (let j = 0; j < response.ingredient_list.length; j++){
+                        productArray.push(response.ingredient_list[j])
+                    }
+                },
+                error: function(error) {
+                console.log(error);
+                }
+            });
+    
+            $.ajax({
+                method: 'GET',
+                url: `https://stormy-castle-78446.herokuapp.com/products`,
+                success: function(response) {
+                    let allProducts = response;
+                    for (n = 0; n < allProducts.length ; n++){
+                        let productObject = response[n];
+    
+                        let similarIngredients = 0;
+                        let percentSimilar = 0;
+                        if (productObject.id != productId){
+                            for (i = 0; i < productArray.length; i++) {
+                                for(j = 0; j < productObject.ingredient_list.length; j++){
+                                    if (productArray[i] === productObject.ingredient_list[j]){
+                                        similarIngredients++;
+                                        productObject.ingredient_list[j] = `${productObject.ingredient_list[j]} *`
+                                    }
+                                }
+                            }
+                            percentSimilar = (similarIngredients/productArray.length)*100;
+                        }
+    
+                        productObject = {
+                            brand: productObject.brand,
+                            id: productObject.id,
+                            ingredient_list: productObject.ingredient_list,
+                            name: productObject.name,
+                            similar_ingredients: similarIngredients,
+                            percent_similar: `${percentSimilar.toFixed(0)}%`
+                        }
+                        
+                        if (similarProductsArray.length < 5) {
+                            similarProductsArray.push(productObject);
+                            similarProductsArray.sort(compare);
+                            similarProductsArray.reverse();
+                        }
+                        else if (productObject.similar_ingredients > similarProductsArray[4].similar_ingredients) {
+                            similarProductsArray.pop();
+                            similarProductsArray.push(productObject);
+                            similarProductsArray.sort(compare);
+                            similarProductsArray.reverse();
+                        }
+                    }
+                    console.log(similarProductsArray);
+    
+                    for (let i = 0; i < 3; i++) {
+                        let productName = $(`<div class="card product-name-wrapper"/>`);
+                        let productText = $(`<b><p></p></b>`);
+                        $(productText).html(`${similarProductsArray[i].brand} ${similarProductsArray[i].name}`)
+                        productName.append(productText)
+                        if (i === 0) {
+                            $('.similar-ingredient-wrapper-0').append(productName)
+                            $('.percent-similar-wrapper-0').append(similarProductsArray[i].percent_similar)
+    
+                        }
+                        else if (i === 1) {
+                            $('.similar-ingredient-wrapper-1').append(productName)
+                            $('.percent-similar-wrapper-1').append(similarProductsArray[i].percent_similar)
+    
+                        }
+                        else if (i === 2) {
+                            $('.similar-ingredient-wrapper-2').append(productName)
+                            $('.percent-similar-wrapper-2').append(similarProductsArray[i].percent_similar)
+    
+                        }
+    
+                        for (let j = 0; j < similarProductsArray[i].ingredient_list.length; j++) {
+                            let card = $(`<div class="card ingredient-wrapper"/>`);
+                            let ingredientText = $(`<p></p>`);
+                            $(ingredientText).html(similarProductsArray[i].ingredient_list[j])
+                            card.append(ingredientText)
+                            if (i === 0) {
+                                $('.similar-ingredient-wrapper-0').append(card)
+                            }
+                            else if (i === 1) {
+                                $('.similar-ingredient-wrapper-1').append(card)
+                            }
+                            else if (i === 2) {
+                                $('.similar-ingredient-wrapper-2').append(card)
+                            }
+                        }
+                    }
+    
+    
+                }
+            })
+        });
+    
+        $('.fav-btn').click(function(e){
+            $.ajax({
+                method: 'POST',
+                url: `http://localhost:8000/product/${e.target.id}`,
+                success: function(res) {
+                    console.log(`Product was added to favorites: ${res}`)
+                },
+                error: function(error) {
+                    console.log(error)
+                }
+            })
+        })
+    
+    
+</script>
+{% endblock %}

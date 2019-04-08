@@ -120,6 +120,11 @@ def delete_review(productid, userid):
     review.delete_instance()
     return redirect(url_for('product', productid=productid))
 
+@app.route('/product/<productid>/comparison_chart')
+@login_required
+def comparison_chart(productid):
+    return render_template('comparison.html', product=productid)
+
 @app.route('/edit/<productid>/user/<userid>', methods=['GET', 'POST'])
 @login_required
 def edit_review(productid, userid):
