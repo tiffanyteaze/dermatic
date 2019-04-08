@@ -82,6 +82,9 @@
           url: `https://skincare-api.herokuapp.com/product?q=${formattedInput}&limit=25&page=1`,
           success: function (response) {
               console.log(response)
+              if (response.length < 1) {
+                $('.search-results').append(`No search results were found matching "${inputVal}"! Try searching for a different skincare product.`)
+              }
               response.map(child => {
                   let productId = child.id;
                   let productLink = `<a href="http://localhost:8000/product/${productId}">${child.brand} ${child.name}</a>`;
