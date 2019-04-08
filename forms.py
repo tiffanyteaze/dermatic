@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm as Form
 
 from models import User
 
-from wtforms import StringField, PasswordField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, TextAreaField, FileField, BooleanField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                Length, EqualTo)
 
@@ -74,10 +74,19 @@ class UserForm(Form):
     )
     profile_image = FileField('Profile Image')
 
+class AvatarForm(Form):
+    avatar = FileField('Upload Avatar')
 
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
 
 class ReviewForm(Form):
+    buy_again = BooleanField('Buy again?')
     content = TextAreaField("Enter Review here", validators=[DataRequired()])
+
+class VoteForm(Form):
+    helpful = BooleanField('Helpful?')
+
+class ExampleForm(Form):
+    checkbox = BooleanField()

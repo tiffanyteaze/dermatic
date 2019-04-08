@@ -56,7 +56,6 @@ def index():
 def register():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        filename = images.save(request.files['profile_image'])
         flash('Yay you registered', 'success')
         models.User.create_user(
             username=form.username.data,
@@ -98,13 +97,10 @@ def product(productid):
     from models import Review, User
     form = forms.ReviewForm()
     product = int(productid)
-    print(current_user.username)
     reviews = (Review.select(Review.content, Review.product_id, User.id, User.username).join(User).where(
         User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)
     if form.validate_on_submit() and 'POST':
-        models.Review.create(user=g.user._get_current_object(),
-                           content=form.content.data.strip(),
-                           product_id=product)
+        models.Review.create(user=g.user._get_current_object(), buy_again = form.buy_again.data(), content=form.content.data.strip(), product_id=product)
         flash("Review posted! Thanks!", "success")
         return redirect(url_for('product', productid=productid))
     elif request.method == 'POST':
@@ -134,6 +130,7 @@ def edit_review(productid, userid):
     review = models.Review.select().where(models.Review.user == user_id,
                                       models.Review.product_id == product_id).get()
     if form.validate_on_submit():
+        review.buy_again = form.buy_again.data
         review.content = form.content.data
         review.save()
         return redirect(url_for('product', productid=productid))
@@ -147,14 +144,16 @@ def update_user(username):
     print("you're outside the form submit")
     print(user.username)
     if form.validate_on_submit():
+        filename = images.save(request.files['profile_image'])
+        url = images.url(filename)
+
         print("you're in the form submit")
-        print(form.username.data)
         user.username = form.username.data
         user.email = form.email.data
         user.password = generate_password_hash(form.password.data)
         user.first_name = form.first_name.data
-        user.avatar = form.profile_image.data
-        print(user.username)
+        user.avatar = filename
+        user.image_url = url
         user.save()
         return redirect(url_for('user', userid=current_user.id))
     return render_template('edit_user.html', user=user, form=form)
@@ -172,7 +171,26 @@ def delete_fav(productid, userid):
     list = models.List.select().where(models.List.user == userid,
                                       models.List.product_id == productid).get()
     list.delete_instance()
-    return redirect(url_for('user', username=current_user.username))
+    return redirect(url_for('user', userid=current_user.id))
+
+@app.route('/example_form', methods=['post', 'get'])
+def example():
+    form = forms.ExampleForm()
+    if form.validate_on_submit():
+        return str(form.checkbox.data)
+    else:
+        return render_template('example.html', form=form)
+
+@app.route('/upload_avatar', methods=['POST', 'GET'])
+def avatar():
+    form = forms.AvatarForm()
+    user = models.User.select().where(models.User.id == current_user.id).get()
+    if form.validate_on_submit():
+        user.avatar = form.avatar.data
+        user.save()
+        return redirect(url_for('user', userid=current_user.id))
+    return render_template('upload_avatar.html', form=form)
+
 
 if __name__ == '__main__':
     models.initialize()
@@ -186,6 +204,7 @@ if __name__ == '__main__':
             skin_type="dry",
             age="31",
             avatar="../static/images/mask.png",
+            image_url="../static/images/mask.png",
             admin=True
             )
     except ValueError:

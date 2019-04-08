@@ -13,6 +13,7 @@ class User(UserMixin, Model):
     last_name = CharField()
     skin_type = CharField()
     avatar = CharField()
+    image_url = CharField()
     age = IntegerField()
     password = CharField(max_length=100)
     joined_at = DateTimeField(default=datetime.datetime.now)
@@ -28,7 +29,7 @@ class User(UserMixin, Model):
         return List.select().where(List.user_id == self)
 
     @classmethod
-    def create_user(cls, username, email, password, first_name="", last_name="", skin_type="", age=18, avatar="../static/images/mask.png", admin=False):
+    def create_user(cls, username, email, password, image_url="", first_name="", last_name="", skin_type="", age=18, avatar="../static/images/mask.png", admin=False):
         try:
             cls.create(
                 username=username,
@@ -39,6 +40,7 @@ class User(UserMixin, Model):
                 skin_type=skin_type,
                 age=age,
                 avatar=avatar,
+                image_url=image_url,
                 is_admin=admin)
         except IntegrityError:
             raise ValueError("User already exists")
@@ -66,7 +68,6 @@ class Review(Model):
     content = TextField()
     product_id = IntegerField()
     buy_again = BooleanField(default=False)
-    rating: IntegerField()
     helpful_votes: IntegerField()
     not_helpful_votes: IntegerField()
 
