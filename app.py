@@ -100,9 +100,20 @@ def product(productid):
     reviews = (Review.select(Review.content, Review.product_id, User.id, User.username).join(User).where(
         User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)
     if form.validate_on_submit() and 'POST':
-        models.Review.create(user=g.user._get_current_object(), buy_again = form.buy_again.data(), content=form.content.data.strip(), product_id=product)
-        flash("Review posted! Thanks!", "success")
-        return redirect(url_for('product', productid=productid))
+        if form.buy_again.data == True:
+            models.Review.create(user=g.user._get_current_object(), 
+            buy_again = 1,
+            content=form.content.data.strip(),
+            product_id=product)
+            flash("Review posted! Thanks!", "success")
+            return redirect(url_for('product', productid=productid))
+        else:
+            models.Review.create(user=g.user._get_current_object(), 
+            buy_again = 0,
+            content=form.content.data.strip(),
+            product_id=product)
+            flash("Review posted! Thanks!", "success")
+            return redirect(url_for('product', productid=productid))
     elif request.method == 'POST':
         models.List.create_list_item(current_user.id, productid)
         return 'success'
@@ -130,7 +141,10 @@ def edit_review(productid, userid):
     review = models.Review.select().where(models.Review.user == user_id,
                                       models.Review.product_id == product_id).get()
     if form.validate_on_submit():
-        review.buy_again = form.buy_again.data
+        if form.buy_again.data == True:
+            review.buy_again = 1
+        if form.buy_again.data == False:
+            review.buy_again = 0
         review.content = form.content.data
         review.save()
         return redirect(url_for('product', productid=productid))
@@ -141,8 +155,6 @@ def edit_review(productid, userid):
 def update_user(username):
     form = forms.UserForm()
     user = models.User.select().where(models.User.username == username).get()
-    print("you're outside the form submit")
-    print(user.username)
     if form.validate_on_submit():
         filename = images.save(request.files['profile_image'])
         url = images.url(filename)
@@ -177,6 +189,13 @@ def delete_fav(productid, userid):
 def example():
     form = forms.ExampleForm()
     if form.validate_on_submit():
+        if form.checkbox.data == True:
+            print("It's true.")
+        elif form.checkbox.data == False:
+            print("It's false.")
+        variable = type(form.checkbox.data)
+        print(variable)
+        print(form.checkbox.data)
         return str(form.checkbox.data)
     else:
         return render_template('example.html', form=form)

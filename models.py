@@ -17,10 +17,12 @@ class User(UserMixin, Model):
     age = IntegerField()
     password = CharField(max_length=100)
     joined_at = DateTimeField(default=datetime.datetime.now)
-    is_admin = BooleanField(default=False)    
+    is_admin = BooleanField(default=False)  
+      
     class Meta:
         database = DATABASE
         order_by = ('-joined_at',)
+        only_save_dirty = True
 
     def get_reviews(self):
         return Review.select().where(Review.user == self)
