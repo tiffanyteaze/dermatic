@@ -6,3 +6,12 @@
 .fav-btn {
     margin: 10px 0;
 }
+
+div.ingredient-match {
+    background-color: #eef9e4;
+}
+
+img.avatar {
+    width: 200px;
+    height: 200px;
+}
