@@ -89,7 +89,7 @@
                                 for(j = 0; j < productObject.ingredient_list.length; j++){
                                     if (productArray[i] === productObject.ingredient_list[j]){
                                         similarIngredients++;
-                                        productObject.ingredient_list[j] = `${productObject.ingredient_list[j]} *`
+                                        productObject.ingredient_list[j] = `MATCH${productObject.ingredient_list[j]}`
                                     }
                                 }
                             }
@@ -141,19 +141,38 @@
                         }
     
                         for (let j = 0; j < similarProductsArray[i].ingredient_list.length; j++) {
-                            let card = $(`<div class="card ingredient-wrapper"/>`);
-                            let ingredientText = $(`<p></p>`);
-                            $(ingredientText).html(similarProductsArray[i].ingredient_list[j])
-                            card.append(ingredientText)
-                            if (i === 0) {
-                                $('.similar-ingredient-wrapper-0').append(card)
+                            if (similarProductsArray[i].ingredient_list[j][0] === "M"){
+                                let formattedProduct = similarProductsArray[i].ingredient_list[j].replace(/MATCH/gi, '');
+                                let card = $(`<div class="card ingredient-wrapper ingredient-match"/>`);
+                                let ingredientText = $(`<p></p>`);
+                                $(ingredientText).html(formattedProduct)
+                                card.append(ingredientText)
+                                if (i === 0) {
+                                    $('.similar-ingredient-wrapper-0').append(card)
+                                }
+                                else if (i === 1) {
+                                    $('.similar-ingredient-wrapper-1').append(card)
+                                }
+                                else if (i === 2) {
+                                    $('.similar-ingredient-wrapper-2').append(card)
+                                }
                             }
-                            else if (i === 1) {
-                                $('.similar-ingredient-wrapper-1').append(card)
+                            else {
+                                let card = $(`<div class="card ingredient-wrapper"/>`);
+                                let ingredientText = $(`<p></p>`);
+                                $(ingredientText).html(similarProductsArray[i].ingredient_list[j])
+                                card.append(ingredientText)
+                                if (i === 0) {
+                                    $('.similar-ingredient-wrapper-0').append(card)
+                                }
+                                else if (i === 1) {
+                                    $('.similar-ingredient-wrapper-1').append(card)
+                                }
+                                else if (i === 2) {
+                                    $('.similar-ingredient-wrapper-2').append(card)
+                                }
                             }
-                            else if (i === 2) {
-                                $('.similar-ingredient-wrapper-2').append(card)
-                            }
+
                         }
                     }
     
