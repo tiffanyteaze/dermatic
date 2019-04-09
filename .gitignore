@@ -136,3 +136,4 @@ dermatic.db
 .DS_Store
 ./instance/flask.cfg
 ./static/.DS_Store
+static/.DS_Store
