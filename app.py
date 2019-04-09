@@ -185,32 +185,6 @@ def delete_fav(productid, userid):
     list.delete_instance()
     return redirect(url_for('user', userid=current_user.id))
 
-@app.route('/example_form', methods=['post', 'get'])
-def example():
-    form = forms.ExampleForm()
-    if form.validate_on_submit():
-        if form.checkbox.data == True:
-            print("It's true.")
-        elif form.checkbox.data == False:
-            print("It's false.")
-        variable = type(form.checkbox.data)
-        print(variable)
-        print(form.checkbox.data)
-        return str(form.checkbox.data)
-    else:
-        return render_template('example.html', form=form)
-
-@app.route('/upload_avatar', methods=['POST', 'GET'])
-def avatar():
-    form = forms.AvatarForm()
-    user = models.User.select().where(models.User.id == current_user.id).get()
-    if form.validate_on_submit():
-        user.avatar = form.avatar.data
-        user.save()
-        return redirect(url_for('user', userid=current_user.id))
-    return render_template('upload_avatar.html', form=form)
-
-
 if __name__ == '__main__':
     models.initialize()
     try:
