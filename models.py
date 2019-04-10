@@ -18,7 +18,7 @@ class User(UserMixin, Model):
     password = CharField(max_length=100)
     joined_at = DateTimeField(default=datetime.datetime.now)
     is_admin = BooleanField(default=False)  
-      
+
     class Meta:
         database = DATABASE
         order_by = ('-joined_at',)
@@ -70,8 +70,8 @@ class Review(Model):
     content = TextField()
     product_id = IntegerField()
     buy_again = BooleanField(default=False)
-    helpful_votes: IntegerField()
-    not_helpful_votes: IntegerField()
+    helpful_votes = IntegerField()
+    not_helpful_votes = IntegerField()
 
     class Meta:
         database = DATABASE
@@ -87,7 +87,7 @@ class Vote(Model):
         model=Review,
         backref='votes'
     )
-    helpful: BooleanField()
+    helpful = BooleanField()
 
     class Meta:
         database = DATABASE
