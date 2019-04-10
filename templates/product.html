@@ -6,6 +6,12 @@
     <h1 class="product-header"></h1>
 </div>
 
+<div class="buy-again">
+    {% if buy_again_votes_percent > 0 %}
+    <h4>{{ buy_again_votes_percent|round(0) }}% would repurchase</h4>
+    {% endif %}
+</div>
+
 <div class="row">
     <h5>Compare Similar Products:</h5>
 </div>
@@ -45,10 +51,9 @@
     </form>
 </div>
 
-
 {% for review in reviews %}
 <div class="row review-container">
-    <p>"{{ review.content }}" by {{ review.user.username }}</p>
+    <p>"{{ review.content }}" by {{ review.user.username }} | {{ review.helpful_votes - review.not_helpful_votes }} found this review helpful</p>
     {% if review.user.id ==  currentuser %}
         <form action="{{ url_for('delete_review', productid=review.product_id, userid=review.user.id) }}" method=post class=delete-review>
             <input type=hidden value="{{review.product_id}}"name=productid</input>
@@ -57,12 +62,23 @@
         </form>
         <a class="btn btn-info edit-review-btn" href="{{ url_for('edit_review', productid=review.product_id, userid=currentuser) }}">Edit</a>
     {% else %}
-        <form action="{{ url_for('edit_review', productid=review.product_id, userid=review.user.id) }}" method=post class=delete-review>
-            <input type=hidden value="{{review.product_id}}"name=productid</input>
-            <input type=hidden value="{{review.user}}"name=userid</input>
-            <input type=checkbox name="helpful" value="helpful">
-            <input type=checkbox name="not-helpful" value="not-helpful">
-            <input type=submit value="Was this review helpful?" class="btn btn-warning btn-block"></input>
+
+        <p>Was this review helpful?</p>
+        <form action="{{ url_for('review_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
+            <input type=hidden value="{{review.product_id}}"name=productid></input>
+            <input type=hidden value="{{review.user}}"name=userid></input>
+            <input type=hidden value="{{ currentuser }}" name=currentuser>
+            <input type=hidden value="{{ review.id }}" name=reviewid>
+            <input type=checkbox name="helpful" value="helpful" checked style="opacity:0; position:absolute; left:9999px;">
+            <input type=submit value="Yes" class="btn btn-warning btn-block"></input>
+        </form>
+        <form action="{{ url_for('review_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
+            <input type=hidden value="{{review.product_id}}"name=productid></input>
+            <input type=hidden value="{{review.user}}"name=userid></input>
+            <input type=hidden value="{{ currentuser }}" name=currentuser>
+            <input type=hidden value="{{ review.id }}" name=reviewid>
+            <input type=checkbox name="not-helpful" value="not-helpful" checked style="opacity:0; position:absolute; left:9999px;">
+            <input type=submit value="No" class="btn btn-warning btn-block"></input>
         </form>
     {% endif %}
 </div>

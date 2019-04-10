@@ -50,7 +50,10 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    return render_template('layout.html')
+    if current_user.is_authenticated:
+        return render_template('logged_in_landing.html')
+    elif current_user.is_authenticated == False:
+        return render_template('logged_out_landing.html')
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
@@ -62,7 +65,6 @@ def register():
             email=form.email.data,
             password=form.password.data
             )
-
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
@@ -94,30 +96,47 @@ def logout():
 @app.route('/product/<productid>', methods=('GET', 'POST'))
 @login_required
 def product(productid):
-    from models import Review, User
+    from models import Review, Vote, User
     form = forms.ReviewForm()
     product = int(productid)
-    reviews = (Review.select(Review.content, Review.product_id, User.id, User.username).join(User).where(
-        User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)
+
+    reviews = (Review.select(Review.content, Review.product_id, User.id, User.username, Review.id, Review.buy_again, Review.helpful_votes, Review.not_helpful_votes).join(User).where(
+        User.id == Review.user and Review.product_id == productid)).where(fn.length(Review.content) > 0)        
+
+    buy_again_votes_total = reviews.count()
+    buy_again_votes_true = 0
+
+    for review in reviews:
+        if review.buy_again == 1:
+            buy_again_votes_true += 1
+    
+    buy_again_votes_percent = (buy_again_votes_true / buy_again_votes_total) * 100
+
+    votes = (Vote.select(Vote.user, Vote.helpful, Review.id).join(Review).where(Vote.review == Review.id and Review.product_id == productid))
+    
     if form.validate_on_submit() and 'POST':
         if form.buy_again.data == True:
             models.Review.create(user=g.user._get_current_object(), 
-            buy_again = 1,
+            buy_again=1,
             content=form.content.data.strip(),
-            product_id=product)
+            product_id=product,
+            helpful_votes=0,
+            not_helpful_votes=0)
             flash("Review posted! Thanks!", "success")
             return redirect(url_for('product', productid=productid))
         else:
             models.Review.create(user=g.user._get_current_object(), 
-            buy_again = 0,
+            buy_again=0,
             content=form.content.data.strip(),
-            product_id=product)
+            product_id=product,
+            helpful_votes=0,
+            not_helpful_votes=0)
             flash("Review posted! Thanks!", "success")
             return redirect(url_for('product', productid=productid))
     elif request.method == 'POST':
         models.List.create_list_item(current_user.id, productid)
         return 'success'
-    return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id)
+    return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id, votes=votes, buy_again_votes_percent=buy_again_votes_percent)
 
 @app.route('/delete/<productid>/user/<userid>', methods=['POST'])
 @login_required
@@ -125,6 +144,30 @@ def delete_review(productid, userid):
     review = models.Review.select().where(models.Review.user == userid,
                                       models.Review.product_id == productid).get()
     review.delete_instance()
+    return redirect(url_for('product', productid=productid))
+
+@app.route('/review_vote/<productid>/user/<userid>/review/<reviewid>', methods=['POST'])
+@login_required
+def review_vote(productid, userid, reviewid):
+    review = models.Review.select().where(models.Review.user == userid,
+                                      models.Review.product_id == productid).get()
+    if request.method == 'POST':
+        if request.form.get('helpful'):
+            review.helpful_votes = review.helpful_votes + 1
+            review.save()
+            models.Vote.create(
+                user=current_user.id,
+                review=reviewid,
+                helpful=1
+            )
+        elif request.form.get('not-helpful'):
+            review.not_helpful_votes = review.not_helpful_votes + 1 
+            review.save()
+            models.Vote.create(
+                user=current_user.id,
+                review=reviewid,
+                helpful=0
+            )
     return redirect(url_for('product', productid=productid))
 
 @app.route('/product/<productid>/comparison_chart')
@@ -143,7 +186,7 @@ def edit_review(productid, userid):
     if form.validate_on_submit():
         if form.buy_again.data == True:
             review.buy_again = 1
-        if form.buy_again.data == False:
+        elif form.buy_again.data == False:
             review.buy_again = 0
         review.content = form.content.data
         review.save()
@@ -158,15 +201,13 @@ def update_user(username):
     if form.validate_on_submit():
         filename = images.save(request.files['profile_image'])
         url = images.url(filename)
-
-        print("you're in the form submit")
         user.username = form.username.data
         user.email = form.email.data
         user.password = generate_password_hash(form.password.data)
         user.first_name = form.first_name.data
         user.avatar = filename
         user.image_url = url
-        user.save()
+        user.save(only=user.dirty_fields)
         return redirect(url_for('user', userid=current_user.id))
     return render_template('edit_user.html', user=user, form=form)
 
