@@ -117,6 +117,21 @@ def product(productid):
         buy_again_votes_percent = 0
 
     votes = (Vote.select(Vote.user, Vote.helpful, Review.id).join(Review).where(Vote.review == Review.id and Review.product_id == productid))
+
+    voter_exists = False
+
+    if votes:
+        print("you're outside the for loop")
+        for vote in votes:
+
+            print("you're outside the if vote.user")
+            if vote.user.id == current_user.id:
+                print("you're inside")
+                print(vote.user)
+                print(current_user.id)
+                print(voter_exists)
+                voter_exists = True
+                print(voter_exists)
     
     if form.validate_on_submit() and 'POST':
         if form.buy_again.data == True:
@@ -140,13 +155,16 @@ def product(productid):
     elif request.method == 'POST':
         models.List.create_list_item(current_user.id, productid)
         return 'success'
-    return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id, votes=votes, buy_again_votes_percent=buy_again_votes_percent)
+    return render_template('product.html', form=form, product=product, reviews=reviews, currentuser=g.user.id, votes=votes, buy_again_votes_percent=buy_again_votes_percent, voter_exists=voter_exists)
 
 @app.route('/delete/<productid>/user/<userid>', methods=['POST'])
 @login_required
 def delete_review(productid, userid):
     review = models.Review.select().where(models.Review.user == userid,
                                       models.Review.product_id == productid).get()
+    votes = models.Vote.select().where(models.Vote.review == review.id)
+    for vote in votes:
+        vote.delete_instance()
     review.delete_instance()
     return redirect(url_for('product', productid=productid))
 
