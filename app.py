@@ -12,11 +12,13 @@ from werkzeug import secure_filename
 
 import models
 import forms
+import os
 
 DEBUG = True
 PORT = 8000
 
-app = Flask(__name__, instance_relative_config=True)
+template_dir = os.path.abspath('./')
+app = Flask(__name__, template_folder=template_dir, instance_relative_config=True)
 app.config.from_pyfile('flask.cfg')
 app.secret_key = 'adkjfalj.adflja.dfnasdf.asd'
 
@@ -109,8 +111,10 @@ def product(productid):
     for review in reviews:
         if review.buy_again == 1:
             buy_again_votes_true += 1
-    
-    buy_again_votes_percent = (buy_again_votes_true / buy_again_votes_total) * 100
+    if buy_again_votes_total > 0:
+        buy_again_votes_percent = (buy_again_votes_true / buy_again_votes_total) * 100
+    elif buy_again_votes_total == 0:
+        buy_again_votes_percent = 0
 
     votes = (Vote.select(Vote.user, Vote.helpful, Review.id).join(Review).where(Vote.review == Review.id and Review.product_id == productid))
     
@@ -228,20 +232,4 @@ def delete_fav(productid, userid):
 
 if __name__ == '__main__':
     models.initialize()
-    try:
-        models.User.create_user(
-            username='tiffany',
-            email="tteaze@gmail.com",
-            password='password',
-            first_name="Tiffany",
-            last_name="Teaze",
-            skin_type="dry",
-            age="31",
-            avatar="../static/images/mask.png",
-            image_url="../static/images/mask.png",
-            admin=True
-            )
-    except ValueError:
-        pass
-
     app.run(debug=DEBUG, port=PORT)

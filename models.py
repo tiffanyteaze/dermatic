@@ -4,8 +4,7 @@ from peewee import *
 from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
 
-DATABASE = SqliteDatabase('dermatic.db')
-
+DATABASE = PostgresqlDatabase('dermatic', user='tiffanyteaze', password='secret', host='127.0.0.1', port=5432)
 class User(UserMixin, Model):
     username = CharField(unique=True)
     email = CharField(unique=True)
