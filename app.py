@@ -121,17 +121,9 @@ def product(productid):
     voter_exists = False
 
     if votes:
-        print("you're outside the for loop")
         for vote in votes:
-
-            print("you're outside the if vote.user")
             if vote.user.id == current_user.id:
-                print("you're inside")
-                print(vote.user)
-                print(current_user.id)
-                print(voter_exists)
                 voter_exists = True
-                print(voter_exists)
     
     if form.validate_on_submit() and 'POST':
         if form.buy_again.data == True:
@@ -190,6 +182,31 @@ def review_vote(productid, userid, reviewid):
                 review=reviewid,
                 helpful=0
             )
+    return redirect(url_for('product', productid=productid))
+
+@app.route('/edit_vote/<productid>/user/<userid>/review/<reviewid>', methods=['POST'])
+@login_required
+def edit_vote(productid, userid, reviewid):
+    from models import Review, Vote
+    review = models.Review.select().where(models.Review.user == userid,
+                                    models.Review.product_id == productid).get()
+    vote = models.Vote.select().where(models.Vote.review == reviewid and models.Vote.user == current_user.id).get()
+
+    if request.method == 'POST':
+        print(request.form)
+        if request.form.get('helpful'):
+            review.helpful_votes = review.helpful_votes + 1
+            review.save()
+            vote.helpful=True
+            vote.save()
+        elif request.form.get('not-helpful'):
+            print("You got to the not helpful condition")
+            review.not_helpful_votes = review.not_helpful_votes + 1 
+            review.save()
+            vote.helpful=False
+            print(vote.helpful)
+            vote.save()
+            print(vote.helpful)
     return redirect(url_for('product', productid=productid))
 
 @app.route('/product/<productid>/comparison_chart')
