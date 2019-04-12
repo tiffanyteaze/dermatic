@@ -53,7 +53,10 @@ def after_request(response):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return render_template('logged_in_landing.html')
+        from models import Review
+        reviews = Review.select()
+        print(reviews)
+        return render_template('logged_in_landing.html', reviews=reviews)
     elif current_user.is_authenticated == False:
         return render_template('logged_out_landing.html')
 

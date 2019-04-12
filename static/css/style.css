@@ -1,3 +1,43 @@
+/* -----
+Body
+----- */
+body {
+    font-family: Raleway, sans-serif;
+}
+
+/* -----
+Nav Bar
+----- */
+.nav-logo{
+    width: 100px;
+    height: auto;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #939393;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #FFFFFF;
+
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    border-bottom: 2px solid #fe999b;
+    color: #939393;
+
+}
+
+.btn.my-2.my-sm-0.name-search-btn {
+    display:none;
+}
+
+.nav-user-icon {
+    height:19px;
+    position: relative;
+    top: 3px;
+}
+
 .review-container {
     border: 1px solid black;
     margin-top: 5px;
@@ -15,3 +55,109 @@ img.avatar {
     width: 200px;
     height: 200px;
 }
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon {
+    width: 1em;
+    height: 1em;
+  }
+  
+ 
+  .svg-icon path,
+  .svg-icon polygon,
+  .svg-icon rect {
+    fill: #fe999b;
+  }
+  
+  .svg-icon circle {
+    stroke: #fe999b;
+    stroke-width: 2;
+  }
+
+/* -----
+Landing Page
+----- */
+.landing-logo {
+    width: 400px;
+    height: 30px;
+}
+
+.landing-tagline {
+    font-family: "Raleway", sans-serif;
+    color: #939393;
+    font-style: italic;
+    font-size: 27px;
+    letter-spacing: 1px;
+}
+
+.tagline-wrapper {
+    margin-bottom: 50px;
+}
+
+hr.landing-thin-line {
+    margin: 50px 0;
+}
+
+.landing-content-wrapper {
+    margin-top: 50px;
+}
+
+.review-wrapper {
+    margin-bottom: 100px;
+}
+
+h5.landing-page-header {
+    background-color: #FCF7F6;
+    color: #FFC4BC;
+    text-transform: uppercase;
+    padding: 15px;
+    font-family: "Raleway";
+    font-weight: bold;
+    letter-spacing: 2px;
+    width: 100%;
+}
+
+.landing-product {
+    width: 150px;
+    height: auto;
+    border: 1px solid #D8D8D8;
+    border-radius: 5px;
+}
+
+.landing-col-wrapper {
+    margin-right: 15px;
+}
+
+.review-col-1{
+    padding: 0;
+    margin: 15px;
+}
+
+.review-col-2{
+    margin: 0 10px;
+}
+
+a.recent-review{
+    color: gray;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+a.recent-review:hover {
+    color: #fe999b;
+    text-decoration: none;
+}
+
+.landing-text {
+    color: gray;
+}
+
+.review-username{
+    color: #fe999b;
+    font-style: italic;
+}
+

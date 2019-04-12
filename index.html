@@ -2,6 +2,7 @@
 <html>
 <head>
   <title></title>
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway:400,400i,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="http://localhost:8000/static/css/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,44 +11,48 @@
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"
 ></script>
+
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <ul class="navbar-nav mr-auto">
-        <li>
-          <a class="navbar-brand" href="http://localhost:8000">Dermatic</a>
-        </li>
-        <li>  
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <a class="navbar-brand" href="http://localhost:8000">
+          <img class="nav-logo" src="http://localhost:8000/static/images/dermatic.png">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('logout')}}" title="logout">Logout</a>            
+            </li>
+            <li class="nav-item">
+                <img class="nav-user-icon align-bottom" src="http://localhost:8000/static/images/user.png">
+            </li>
+            <li>
+                <a class="nav-link" href="{{ url_for('user', userid=current_user.id) }}">
+                    {{current_user.username}}
+               </a>            
+            </li>
+            {% else %}
+            <li>
+              <a class="nav-link" href="{{url_for('login')}}" title="login">Login</a>
+            </li>
+            <li>
+              <a class="nav-link" href="{{url_for('register')}}" title="register">Register</a>
+            </li>
+            {% endif %}
+          </ul>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2 product-input" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0 name-search-btn" type="submit">Search</button>
-          </form>
-        </li>
-        {% if current_user.is_authenticated %}
-        <li>
-          <a class="nav-link" href="{{url_for('logout')}}" title="logout">Logout</a>
-        </li>
-        <li>
-            <a class="nav-link" href="{{ url_for('user', userid=current_user.id) }}">
-              <i class="fas fa-user-circle"></i> Profile
-            </a>
-        </li>
-        {% else %}
-        <li>
-          <a class="nav-link" href="{{url_for('login')}}" title="login">Login</a>
-        </li>
-        <li>
-          <a class="nav-link" href="{{url_for('register')}}" title="register">Register</a>
-        </li>
-        {% endif %}
-      </ul>
+              <input class="form-control mr-sm-2 product-input" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn my-2 my-sm-0 name-search-btn" type="submit">Search</button>
+            </form>
+        </div>
       </nav>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>{% if current_user.is_authenticated %} Hello {{current_user.username}} {%endif%}</h1>
-      </div>
-    </div>
     <div class="row">
       <div class="search-results"></div>
     </div>
@@ -67,7 +72,6 @@
       </div>
     </div>
   </div>
-
 
 <script src="../static/scripts/app.js"></script>
 <script>
@@ -107,5 +111,6 @@
       })
   })
 </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
