@@ -55,7 +55,6 @@ def index():
     if current_user.is_authenticated:
         from models import Review
         reviews = Review.select()
-        print(reviews)
         return render_template('logged_in_landing.html', reviews=reviews)
     elif current_user.is_authenticated == False:
         return render_template('logged_out_landing.html')
@@ -196,20 +195,16 @@ def edit_vote(productid, userid, reviewid):
     vote = models.Vote.select().where(models.Vote.review == reviewid and models.Vote.user == current_user.id).get()
 
     if request.method == 'POST':
-        print(request.form)
         if request.form.get('helpful'):
             review.helpful_votes = review.helpful_votes + 1
             review.save()
             vote.helpful=True
             vote.save()
         elif request.form.get('not-helpful'):
-            print("You got to the not helpful condition")
             review.not_helpful_votes = review.not_helpful_votes + 1 
             review.save()
             vote.helpful=False
-            print(vote.helpful)
             vote.save()
-            print(vote.helpful)
     return redirect(url_for('product', productid=productid))
 
 @app.route('/product/<productid>/comparison_chart')

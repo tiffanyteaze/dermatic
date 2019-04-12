@@ -79,8 +79,8 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 class ReviewForm(Form):
-    buy_again = BooleanField('Buy again?')
-    content = TextAreaField("Enter Review here", validators=[DataRequired()])
+    buy_again = BooleanField("Buy again?")
+    content = TextAreaField("Enter your review here.", validators=[DataRequired()])
 
 class VoteForm(Form):
     helpful = BooleanField('Helpful?')

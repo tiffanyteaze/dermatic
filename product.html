@@ -3,75 +3,85 @@
 
 {% block content %}
 <div class="product" id={{ product }}>
-    <h1 class="product-header"></h1>
+    <h1 class="product-name-header"></h1>
+</div>
+<div class="product" id={{ product }}>
+        <h2 class="product-brand-header"></h2>
 </div>
 
-<div class="buy-again">
-    {% if buy_again_votes_percent > 0 %}
-    <h4>{{ buy_again_votes_percent|round(0) }}% would repurchase</h4>
-    {% endif %}
+<div class="row buy-again justify-content-end">
+        {% if buy_again_votes_percent > 0 %}
+        <h4>Would buy again: <span class="percent">{{ buy_again_votes_percent|round(0) }}%</span></h4>
+        {% endif %}
+    </div>
+
+<div class="row justify-content-end">
+    <button class="fav-btn" id={{ product }}>Add To Favorites</button>
+    <a href="#review" class="review-btn" data-toggle="collapse">Write a Review</a>
 </div>
 
 <div class="row">
-    <h5>Compare Similar Products:</h5>
+        <div id="review" class="collapse">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                {% for field in form %}
+                    {{ render_field(field) }}
+                {% endfor %}
+                <button class="submit-review-btn" type="submit" id="submit">Post a review!</button>
+            </form>
+        </div>
+    </div>
+
+<div class="row ingredient-header-wrapper d-flex justify-content-center">
+    <h5 class="ingredient-header pagination-centered">Compare By Ingredient</h5>
 </div>
 
-<div class="row">
+<div class="row ingredient-table-wrapper">
     <div class="ingredients col"></div>
     <div class="similar-ingredient-wrapper-0 col"></div>
     <div class="similar-ingredient-wrapper-1 col"></div>
     <div class="similar-ingredient-wrapper-2 col"></div>
 </div>
 
-<div class="row">
-    <div class="col">
-        <div class="card">
-            <b><p>Percent Similar:</p></b>
-        </div>
+<div class="row percent-similar-wrapper">
+    <div class="col percent-similar">
+            <p>Percent Similar:</p>
     </div>
     <div class="percent-similar-wrapper-0 col"></div>
     <div class="percent-similar-wrapper-1 col"></div>
     <div class="percent-similar-wrapper-2 col"></div>
 </div>
 <div class="row justify-content-end">
-    <a href="{{ url_for('comparison_chart', productid=product) }}">View Full Ingredient Lists</a>
+    <a class="compare-link" href="{{ url_for('comparison_chart', productid=product) }}">+ Compare Full List</a>
 </div>
 
-<div class="row justify">
-    <button class="fav-btn" id={{ product }}>Add To Favorites</button>
+<div class="row review-header-wrapper">
+        <h5 class="review-header">Reviews</h5>
 </div>
 
-<div class="row">
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        {% for field in form %}
-            {{ render_field(field) }}
-        {% endfor %}
-        <button type="submit" id="submit">Post a review!</button>
-    </form>
-</div>
-
+<div class="review-container container-fluid">
 {% for review in reviews %}
-<div class="row review-container">
-    <p>"{{ review.content }}" by {{ review.user.username }} | {{ review.helpful_votes - review.not_helpful_votes }} found this review helpful</p>
+<div class="row review-wrapper">
+    <div class="col">
+    <p>posted by <span class="review-username">{{ review.user.username }}</span></p>
+    <p>{{ review.content }}</p>
+    <p>{{ review.helpful_votes - review.not_helpful_votes }} found this review helpful</p>
     {% if review.user.id ==  currentuser %}
         <form action="{{ url_for('delete_review', productid=review.product_id, userid=review.user.id) }}" method=post class=delete-review>
             <input type=hidden value="{{review.product_id}}"name=productid</input>
             <input type=hidden value="{{review.user}}"name=userid</input>
-            <input type=submit value="Delete" class="btn btn-warning btn-block"></input>
+            <input type=submit value="Delete" class="fav-btn"></input>
         </form>
-        <a class="btn btn-info edit-review-btn" href="{{ url_for('edit_review', productid=review.product_id, userid=currentuser) }}">Edit</a>
+        <a class="review-btn edit-review-btn" href="{{ url_for('edit_review', productid=review.product_id, userid=currentuser) }}">Edit</a>
     {% else %}
         {% if voter_exists %}
-        <h7>THIS IS EDIT</h7>
-            <p>Was this review helpful?</p>
             <form action="{{ url_for('edit_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
                 <input type=hidden value="{{review.product_id}}"name=productid></input>
                 <input type=hidden value="{{review.user}}"name=userid></input>
                 <input type=hidden value="{{ currentuser }}" name=currentuser>
                 <input type=hidden value="{{ review.id }}" name=reviewid>
                 <input type=checkbox name="helpful" value="helpful" checked style="opacity:0; position:absolute; left:9999px;">
-                <input type=submit value="Yes" class="btn btn-warning btn-block"></input>
+                <input type=submit value="+ Helpful" class="fav-btn"></input>
             </form>
             <form action="{{ url_for('edit_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
                 <input type=hidden value="{{review.product_id}}"name=productid></input>
@@ -79,18 +89,16 @@
                 <input type=hidden value="{{ currentuser }}" name=currentuser>
                 <input type=hidden value="{{ review.id }}" name=reviewid>
                 <input type=checkbox name="not-helpful" value="not-helpful" checked style="opacity:0; position:absolute; left:9999px;">
-                <input type=submit value="No" class="btn btn-warning btn-block"></input>
+                <input type=submit value="- Not" class="fav-btn"></input>
             </form>
         {% else %}
-        <h7>THIS IS CREATE</h7>
-            <p>Was this review helpful?</p>
             <form action="{{ url_for('review_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
                 <input type=hidden value="{{review.product_id}}"name=productid></input>
                 <input type=hidden value="{{review.user}}"name=userid></input>
                 <input type=hidden value="{{ currentuser }}" name=currentuser>
                 <input type=hidden value="{{ review.id }}" name=reviewid>
                 <input type=checkbox name="helpful" value="helpful" checked style="opacity:0; position:absolute; left:9999px;">
-                <input type=submit value="Yes" class="btn btn-warning btn-block"></input>
+                <input type=submit value="+ Helpful" class="fav-btn"></input>
             </form>
             <form action="{{ url_for('review_vote', productid=review.product_id, userid=review.user.id, reviewid=review.id) }}" method=post class=review-vote>
                 <input type=hidden value="{{review.product_id}}"name=productid></input>
@@ -98,12 +106,15 @@
                 <input type=hidden value="{{ currentuser }}" name=currentuser>
                 <input type=hidden value="{{ review.id }}" name=reviewid>
                 <input type=checkbox name="not-helpful" value="not-helpful" checked style="opacity:0; position:absolute; left:9999px;">
-                <input type=submit value="No" class="btn btn-warning btn-block"></input>
+                <input type=submit value="- Not" class="fav-btn"></input>
             </form>
         {% endif %}
     {% endif %}
 </div>
+</div>
+<div class="review-break"></div>
 {% endfor %}
+</div>
 
 <script>
     let productId = $('.product')[0].attributes.id.value
@@ -125,10 +136,12 @@
             method: 'GET',
             url: `https://stormy-castle-78446.herokuapp.com/products/${productId}`,
             success: function (response) {
-                $('.product-header').html(`${response.brand} ${response.name}`)
+                $('.product-name-header').html(`${response.name}`)
+                $('.product-brand-header').html(`${response.brand}`)
+
 
                 let productName = $(`<div class="card product-name-wrapper"/>`);
-                let productText = $(`<b><p></p></b>`)
+                let productText = $(`<p></p>`)
                 $(productText).html(`${response.brand} ${response.name}`)
                 productName.append(productText)
                 $('.ingredients').append(productName)
@@ -199,7 +212,7 @@
 
                 for (let i = 0; i < 3; i++) {
                     let productName = $(`<div class="card product-name-wrapper"/>`);
-                    let productText = $(`<b><p></p></b>`);
+                    let productText = $(`<p></p>`);
                     $(productText).html(`${similarProductsArray[i].brand} ${similarProductsArray[i].name}`)
                     productName.append(productText)
                     if (i === 0) {

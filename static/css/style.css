@@ -5,6 +5,15 @@ body {
     font-family: Raleway, sans-serif;
 }
 
+.fav-btn {
+    margin: 10px 0;
+}
+
+img.avatar {
+    width: 200px;
+    height: 200px;
+}
+
 /* -----
 Nav Bar
 ----- */
@@ -38,23 +47,7 @@ Nav Bar
     top: 3px;
 }
 
-.review-container {
-    border: 1px solid black;
-    margin-top: 5px;
-}
 
-.fav-btn {
-    margin: 10px 0;
-}
-
-div.ingredient-match {
-    background-color: #eef9e4;
-}
-
-img.avatar {
-    width: 200px;
-    height: 200px;
-}
 
 /* -----
 SVG Icons - svgicons.sparkk.fr
@@ -103,10 +96,6 @@ hr.landing-thin-line {
 
 .landing-content-wrapper {
     margin-top: 50px;
-}
-
-.review-wrapper {
-    margin-bottom: 100px;
 }
 
 h5.landing-page-header {
@@ -161,3 +150,222 @@ a.recent-review:hover {
     font-style: italic;
 }
 
+/* -----
+Product Page
+----- */
+.product-name-header {
+    text-transform: uppercase;
+    color: #fe999b;
+    font-weight: 900;
+}
+
+.product-brand-header {
+    text-transform: uppercase;
+    color: #fe999b;
+}
+
+.ingredient-header-wrapper {
+    background-color: #F7C6BF;
+    padding: 10px;
+    padding-top: 15px;
+}
+
+.ingredient-header {
+    text-transform: uppercase;
+    background-color: #F7C6BF;
+    color: #FFFFFF;
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+}
+
+.ingredient-table-wrapper {
+    border: 1px solid #F7C6BF;
+}
+
+.ingredient-wrapper {
+    border: none;
+    padding: 5px;
+}
+
+.ingredient-wrapper > p {
+    color: #939393;
+}
+
+.product-name-wrapper {
+    border: none;
+}
+
+.product-name-wrapper > p {
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #939393;
+}
+
+div.ingredient-match {
+    background-color: #F7C6BF;
+    border-radius: 0;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.ingredient-match > p {
+color: #FFFFFF;
+}
+
+.percent-similar-wrapper {
+    margin-top: 10px;
+}
+
+.percent-similar > p {
+    text-transform: uppercase;
+    color: #fab9ba;
+    font-weight: 900;
+}
+
+.percent-similar-wrapper-0,
+.percent-similar-wrapper-1,
+.percent-similar-wrapper-2 {
+    color: #939393;
+
+}
+
+.compare-link {
+    text-transform: uppercase;
+    color: #fab9ba;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 40px;
+}
+
+.compare-link:hover {
+    color: #fab9ba;
+}
+
+.fav-btn {
+    border: 1px solid #fab9ba;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #fab9ba;
+    letter-spacing: 1px;
+    margin-right: 5px;
+}
+
+.fav-btn:hover {
+    background-color: #fab9ba;
+    color: #FFFFFF;
+}
+
+a.review-btn{
+    border: 1px solid #fab9ba;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #fab9ba;
+    letter-spacing: 1px;
+    padding: 3px;
+    height: 29px;
+    position: relative;
+    top: 9px;
+}
+
+a.review-btn:hover{
+    background-color: #fab9ba;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+button.submit-review-btn {
+    border: 1px solid #fab9ba;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #fab9ba;
+    letter-spacing: 1px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+button.submit-review-btn:hover {
+    background-color: #fab9ba;
+    color: #FFFFFF;
+}
+
+label {
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #939393;
+    letter-spacing: 1px;
+}
+
+textarea {
+    width: 400px;
+    height: 100px;
+    border: 1px solid #fab9ba;
+}
+
+.buy-again > h4 {
+    text-transform: uppercase;
+    color: #939393;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+span.percent {
+    color: #FE999B;
+}
+
+/* -----
+Reviews
+----- */
+
+.review-header-wrapper {
+    background-color: #FCF7F6;
+    color: #FFC4BC;
+}
+
+h5.review-header{
+    text-transform: uppercase;
+    padding: 15px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin: auto;
+}
+
+.review-container {
+    margin-top: 5px;
+}
+
+.review-wrapper {
+    margin-bottom: 10px;
+}
+
+.review-break {
+    height: 2px;
+    background-color: #FFC4BC;
+    margin-top: 5px;
+}
+
+input.fav-btn {
+    border: 1px solid #fab9ba;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #fab9ba;
+    letter-spacing: 1px;
+    margin-right: 5px;
+}
+
+input.fav-btn:hover {
+    background-color: #fab9ba;
+    color: #FFFFFF;
+}
+
+.edit-review-btn {
+    margin-bottom: 5px;
+}
+
+/* -----
+Footer
+----- */
+
+.footer {
+    height: 100px;
+}
