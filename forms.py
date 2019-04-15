@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm as Form
 
 from models import User
 
-from wtforms import StringField, PasswordField, TextAreaField, FileField, BooleanField
+from wtforms import StringField, PasswordField, TextAreaField, FileField, BooleanField, IntegerField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                Length, EqualTo)
 
@@ -71,6 +71,15 @@ class UserForm(Form):
         ])
     first_name = StringField(
         'First Name'
+    )
+    last_name = StringField(
+        'Last Name'
+    )
+    skin_type = StringField(
+        'Skin Type'
+    )
+    age = IntegerField(
+        'Age'
     )
     profile_image = FileField('Profile Image')
 

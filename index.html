@@ -54,7 +54,8 @@
       </nav>
   <div class="container">
     <div class="row">
-      <div class="search-results"></div>
+      <div class="search-results">
+      </div>
     </div>
     </div>
     <br>
@@ -83,7 +84,6 @@
       let inputVal = $('.product-input').val();
       let formattedInput = inputVal.replace(/ /g, '+');
       console.log(formattedInput)
-      let searchTerm = "drunk+elephant"
       $.ajax({
           method: 'GET',
           url: `https://skincare-api.herokuapp.com/product?q=${formattedInput}&limit=25&page=1`,
@@ -92,10 +92,12 @@
               if (response.length < 1) {
                 $('.search-results').append(`No search results were found matching "${inputVal}"! Try searching for a different skincare product.`)
               }
-              response.map(child => {
+              else {
+                $('.search-results').append(`<h2 class="product-brand-header">Search Results:</h2>`)
+                response.map(child => {
                   let productId = child.id;
-                  let productLink = `<a href="http://localhost:8000/product/${productId}">${child.brand} ${child.name}</a>`;
-                  let card = $(`<div class="card search-wrapper"/>`);
+                  let productLink = `<a class="recent-review" href="http://localhost:8000/product/${productId}">${child.brand} ${child.name}</a>`;
+                  let card = $(`<div class="search-wrapper"/>`);
                   let btn = $(
                     `<input class="now-playing-button btn btn-dark btn-block" type=submit value="View Product" data-id="${productId}"></input>`
                   );
@@ -104,8 +106,8 @@
                   $('.search-results').append(card);
                   return productId;
                 });
-  
-  
+              }
+              
           },
           error: function(error) {
               console.log(error);

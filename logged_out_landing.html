@@ -1,4 +1,92 @@
 {% extends "index.html" %}
 {% block content %}
-<h2>This is the logged out landing page.</h2>
+<div class="d-flex justify-content-center">
+    <img class="landing-logo img-responsive h-50 d-inline-block" src="http://localhost:8000/static/images/dermatictextlogo.png">
+</div>
+<div class="row d-flex justify-content-center tagline-wrapper">
+<h4 class="landing-tagline">skincare ingredient checker</h4>
+</div>
+<hr class="landing-thin-line" style="width: 100%; color: #FFC4BC; height: 1px; background-color:#FFC4BC;" />
+<div class="landing-content-wrapper container-fluid">
+    <div class="row">
+        <div class="col landing-col-wrapper">
+                <div class="row">
+                        <h5 class="landing-page-header">Recent Reviews</h5>
+                    </div>  
+                        <div class="row review-wrapper mb-3">
+                            <div class="col review-col-1">
+                                <img class="landing-product" src="http://localhost:8000/static/images/product01.jpg">
+                            </div>
+                            <div class="col review-col-2">
+                                <div class="row landing-product-id" id="">
+                                    <a class="recent-review" href="http://localhost:8000/product/1591">drunk elephant TLC framboos glycolic night serum</a>
+                                </div>
+                                <div class="row landing-product-name"></div>
+                                <div class="row landing-text">
+                                    <p>posted by <span class="review-username">PrincessSparkle22</span></p>
+                                </div>
+                                <div class="row landing-text">
+                                    <p>This is a strong lactic acid product and it has made my very dry, very thin, mature skin look airbrushed and healthy. I recommend using it only at night, as there can be sensitivity.</p>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="row review-wrapper mb-3">
+                            <div class="col review-col-1">
+                                <img class="landing-product" src="http://localhost:8000/static/images/product02.jpg">
+                            </div>
+                            <div class="col review-col-2">
+                                <div class="row landing-product-id" id="">
+                                    <a class="recent-review" href="http://localhost:8000/product/1604">farmacy green clean</a>
+                                </div>
+                                <div class="row landing-product-name"></div>
+                                <div class="row landing-text">
+                                    <p>posted by <span class="review-username">MadeOutWithAHotDog</span></p>
+                                </div>
+                                <div class="row landing-text">
+                                    <p>This moisturizer has an interesting texture because it is lighter than most moisturizers I have used. I know this sounds weird, but it feels like I am putting water on my face.</p>
+                                </div>
+                            </div>
+                        </div>
+        </div>
+        <div class="col landing-col-wrapper">
+                <div class="row">
+                    <h5 class="landing-page-header">Popular Products</h5>
+                </div>  
+                    <div class="row review-wrapper mb-3">
+                        <div class="col review-col-1">
+                            <img class="landing-product" src="http://localhost:8000/static/images/product04.jpg">
+                        </div>
+                        <div class="col review-col-2">
+                            <div class="row landing-product-id" id="">
+                                <a class="recent-review" href="http://localhost:8000/product/1591">sunday riley good genes all-in-one lactic acid treatment</a>
+                            </div>
+                            <div class="row landing-product-name"></div>
+                            <div class="row landing-text">
+                                <p>posted by <span class="review-username">PrincessSparkle22</span></p>
+                            </div>
+                            <div class="row landing-text">
+                                <p>This is a strong lactic acid product and it has made my very dry, very thin, mature skin look airbrushed and healthy. I recommend using it only at night, as there can be sensitivity.</p>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row review-wrapper mb-3">
+                        <div class="col review-col-1">
+                            <img class="landing-product" src="http://localhost:8000/static/images/product05.jpg">
+                        </div>
+                        <div class="col review-col-2">
+                            <div class="row landing-product-id" id="">
+                                <a class="recent-review" href="http://localhost:8000/product/1604">tatcha the water cream</a>
+                            </div>
+                            <div class="row landing-product-name"></div>
+                            <div class="row landing-text">
+                                <p>posted by <span class="review-username">MadeOutWithAHotDog</span></p>
+                            </div>
+                            <div class="row landing-text">
+                                <p>This moisturizer has an interesting texture because it is lighter than most moisturizers I have used. I know this sounds weird, but it feels like I am putting water on my face.</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+    </div>
+</div>
 {% endblock %}

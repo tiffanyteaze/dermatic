@@ -11,7 +11,8 @@ body {
 
 img.avatar {
     width: 200px;
-    height: 200px;
+    height: auto;
+    border-radius: 300px;
 }
 
 /* -----
@@ -360,6 +361,62 @@ input.fav-btn:hover {
 
 .edit-review-btn {
     margin-bottom: 5px;
+}
+
+/* -----
+Profile
+----- */
+.profile-header {
+    text-transform: uppercase;
+    color: #EE9DA3;
+    font-weight: 900;
+}
+
+/* -----
+Favorites
+----- */
+.favorite-header-wrapper {
+    margin: 20px 0;
+    background-color: #FCF7F6;
+    color: #FFC4BC;
+}
+
+h5.favorite-header{
+    text-transform: uppercase;
+    padding: 15px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin: auto;
+}
+
+ul.my-fav-list {
+    list-style: none;
+}
+
+a.fav-item{
+    color: gray;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+a.fav-item:hover {
+    color: #fe999b;
+    text-decoration: none;
+}
+
+/* -----
+Forms
+----- */
+input#email,
+input#username,
+input#password,
+input#first_name,
+input#last_name,
+input#skin_type,
+input#age,
+input#profile_image {
+    margin: 5px;
 }
 
 /* -----

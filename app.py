@@ -98,7 +98,6 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/product/<productid>', methods=('GET', 'POST'))
-@login_required
 def product(productid):
     from models import Review, Vote, User
     form = forms.ReviewForm()
