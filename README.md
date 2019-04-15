@@ -11,6 +11,13 @@ A site for users to post reviews on skincare products. Each product page will ha
 - Flask Login Manager
 - Bootstrap
 
+## Wireframes
+Designs by Jacque Lamkin
+
+![Original Wireframe](https://monosnap.com/image/hDlzUqGi5fg9QTiAFGgOuUZzpwydQ6.png)
+![Landing # Profile Page Mockups](https://monosnap.com/image/DTtFPs60ECV9qDObfgqMloYiLAQ3kg.png)
+![Product Page Mockup](https://monosnap.com/image/84rZ2D7DaQI3wcdVtTvHyHZYe78lRo.png)
+
 ## Existing Features
 
 - Ingredient Comparison Chart
