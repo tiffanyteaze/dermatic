@@ -5,7 +5,6 @@ from flask_bcrypt import check_password_hash
 from peewee import fn
 from flask_bcrypt import generate_password_hash
 
-from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_wtf import Form
 from flask_wtf.file import FileField
 from werkzeug import secure_filename
@@ -19,12 +18,8 @@ PORT = 8000
 
 template_dir = os.path.abspath('./')
 app = Flask(__name__, template_folder=template_dir, instance_relative_config=True)
-app.config.from_pyfile('flask.cfg')
 app.secret_key = 'adkjfalj.adflja.dfnasdf.asd'
 
-# Sets variable images to uploader
-images = UploadSet('images', IMAGES)
-configure_uploads(app, images)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -241,8 +236,6 @@ def update_user(username):
         user.email = form.email.data
         user.password = generate_password_hash(form.password.data)
         user.first_name = form.first_name.data
-        user.avatar = filename
-        user.image_url = url
         user.save(only=user.dirty_fields)
         return redirect(url_for('user', userid=current_user.id))
     return render_template('edit_user.html', user=user, form=form)

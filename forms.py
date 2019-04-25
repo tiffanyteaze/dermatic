@@ -81,7 +81,6 @@ class UserForm(Form):
     age = IntegerField(
         'Age'
     )
-    profile_image = FileField('Profile Image')
 
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
